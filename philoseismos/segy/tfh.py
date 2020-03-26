@@ -1,5 +1,7 @@
 """ philoseismos: engineering seismologist's toolbox.
 
+This file defines a TextualFileHeader object.
+
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
@@ -13,8 +15,13 @@ class TextualFileHeader:
         self._contents = None
 
     @classmethod
-    def load(cls, file):
-        """ Load TFH from file. """
+    def load(cls, file: str):
+        """ Load TFH from file a SEG-Y file.
+
+        Args:
+            file (str) : Path to a SEG-Y file to load from.
+
+        """
 
         tfh = cls()
 
