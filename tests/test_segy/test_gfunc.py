@@ -122,3 +122,37 @@ def test_grab_number_of_traces(manually_crafted_segy_file):
 
         # the number of traces has to be an integer
         assert isinstance(gfunc.grab_number_of_traces(sgy), int)
+
+
+def test_unpack_ibm32():
+    """ Test the general function for unpacking IBM floats. """
+
+    assert gfunc.unpack_ibm32(b'\xc2v\xa0\x00', endian='>') == -118.625
+    assert gfunc.unpack_ibm32(b'\x00\xa0v\xc2', endian='<') == -118.625
+
+
+def test_pack_ibm32():
+    """ Test the general function for packing IBM floats. """
+
+    assert gfunc.pack_ibm32(-118.625, '>') == b'\xc2v\xa0\x00'
+    assert gfunc.pack_ibm32(-118.625, '<') == b'\x00\xa0v\xc2'
+
+
+def test_pack_ibm32_series():
+    """ Test the general function for packing float arrays to IBM bytearrays. """
+
+    big_endian = gfunc.pack_ibm32_series([-118.625, 118.625, 0, 601], '>')
+    little_endian = gfunc.pack_ibm32_series([-118.625, 118.625, 0, 601], '<')
+
+    assert big_endian == b'\xc2v\xa0\x00Bv\xa0\x00\x00\x00\x00\x00C%\x90\x00'
+    assert little_endian == b'\x00\xa0v\xc2\x00\xa0vB\x00\x00\x00\x00\x00\x90%C'
+
+
+def test_unpack_ibm32_series():
+    """ Test the general function for unpacking IBM bytearrays to float arrays. """
+
+    big_endian = bytearray(b'\xc2v\xa0\x00Bv\xa0\x00\x00\x00\x00\x00C%\x90\x00')
+    little_endian = bytearray(b'\x00\xa0v\xc2\x00\xa0vB\x00\x00\x00\x00\x00\x90%C')
+
+    assert gfunc.unpack_ibm32_series(big_endian, '>') == (-118.625, 118.625, 0, 601)
+    assert gfunc.unpack_ibm32_series(little_endian, '<') == (-118.625, 118.625, 0, 601)

@@ -12,6 +12,7 @@ author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
 import struct
+import math
 
 from philoseismos.segy.constants import SFC
 
@@ -170,3 +171,65 @@ def grab_number_of_traces(opened_file):
     opened_file.seek(position)
 
     return int((size - 3600) / (240 + tl * nb))
+
+
+# functions to work with IBM values
+
+def unpack_ibm32(val: bytes, endian: str) -> float:
+    """ Unpack bytes containing an IBM floating point value. """
+
+    ibm = struct.unpack(endian + 'L', val)[0]
+
+    sign = ibm >> 31
+    exponent = ibm >> 24 & 0b1111111
+    fraction = (ibm & 0b111111111111111111111111) / float(pow(2, 24))
+
+    return (1 - 2 * sign) * fraction * pow(16, exponent - 64)
+
+
+def pack_ibm32(value: float, endian: str) -> bytes:
+    """ Pack a floating point value into an IBM floating point. """
+
+    if value == 0:
+        return bytearray(4)
+    elif abs(value) > 7.2370051459731155e+75:
+        raise ValueError('The value is too large to be packed as IBM!')
+    elif abs(value) < 5.397605346934028e-79:
+        raise ValueError('The value is too small to be packed as IBM!')
+
+    if value < 0:
+        sign = 1
+        value *= -1
+    else:
+        sign = 0
+
+    M, E = math.frexp(value)
+    f = E / 4
+    F = math.ceil(f)
+    f_err = F - f
+    N = M * pow(2, -4 * f_err)
+    F += 64
+    N = int(N * pow(2, 24))
+
+    uint = (((sign << 7) | F) << 24) | N
+
+    return struct.pack(endian + 'L', uint)
+
+
+def unpack_ibm32_series(data: bytearray, endian: str) -> tuple:
+    """ Unpacks a bytearray containing multiple IBM values. """
+
+    out = []
+    for i in range(int(len(data) / 4)):
+        out.append(unpack_ibm32(data[i * 4: (i + 1) * 4], endian=endian))
+
+    return tuple(out)
+
+
+def pack_ibm32_series(values: list, endian: str, ) -> bytearray:
+    """ Packs an array of values into a bytearray of IBM 32 packed bytes. """
+
+    out = bytearray(len(values) * 4)
+    for i, value in enumerate(values):
+        out[i * 4: (i + 1) * 4] = pack_ibm32(value=value, endian=endian)
+    return out
