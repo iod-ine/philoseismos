@@ -3,6 +3,8 @@
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
+import numpy as np
+
 # format string to unpack BFHs in one go
 BFHFS = 'iiihhhhhhhhhhhhhhhhhhhhhhhhiiiQQiii' + 'i' * 50 + 'BBhhihQQi' + 'i' * 17
 
@@ -163,3 +165,27 @@ THCOLS = ['TRACENO',  # ordinal number of a trace
           'Source Measurement (10 power exponent)',
           'Source Measurement Unit']
 # then go 8 bytes of text - so called "Header name"
+
+# dictionaries to map sample format code to data matrix dtype
+DTYPEMAP = {
+    1: np.float64,
+    2: np.int32,
+    3: np.int16,
+    5: np.float32,
+    6: np.float64,
+    8: np.int8,
+    9: np.int64,
+    10: np.uint32,
+    11: np.uint16
+}
+
+IDTYPEMAP = {
+    np.float32: 5,
+    np.int32: 2,
+    np.int16: 3,
+    np.float64: 6,
+    np.int8: 8,
+    np.int64: 9,
+    np.uint32: 10,
+    np.uint16: 11
+}
