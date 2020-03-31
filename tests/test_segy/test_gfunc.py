@@ -45,6 +45,7 @@ def test_get_number_of_traces(manually_crafted_segy_file):
     """ Test the general function for getting number of traces. """
 
     assert gfunc.get_number_of_traces(manually_crafted_segy_file) == 24
+    assert isinstance(gfunc.get_number_of_traces(manually_crafted_segy_file), int)
 
 
 # then are the tests for the `grab_` functions
@@ -118,3 +119,6 @@ def test_grab_number_of_traces(manually_crafted_segy_file):
         position = sgy.tell()
         assert gfunc.grab_number_of_traces(sgy) == 24
         assert sgy.tell() == position
+
+        # the number of traces has to be an integer
+        assert isinstance(gfunc.grab_number_of_traces(sgy), int)

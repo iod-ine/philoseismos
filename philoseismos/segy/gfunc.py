@@ -169,4 +169,4 @@ def grab_number_of_traces(opened_file):
     size = opened_file.tell()
     opened_file.seek(position)
 
-    return (size - 3600) / (240 + tl * nb)
+    return int((size - 3600) / (240 + tl * nb))
