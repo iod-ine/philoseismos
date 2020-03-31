@@ -1,5 +1,7 @@
 """ philoseismos: engineering seismologist's toolbox.
 
+This file contains tests for the BinaryFileHeader object.
+
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 

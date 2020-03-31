@@ -12,6 +12,7 @@ def test_loading_from_file(manually_crafted_segy_file):
     # to load the TFH from a SEG-Y file, use a .load() method
     tfh = TextualFileHeader.load(manually_crafted_segy_file)
 
+    # the contents of the TFH are accessed via its repr()
     # check that it's contents are what they should be
     assert repr(tfh)[0:800] == ' ' * 800
     assert repr(tfh)[800:880] == 'Alle warten auf das Licht'.ljust(80)

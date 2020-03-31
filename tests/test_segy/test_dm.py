@@ -1,5 +1,7 @@
 """ philoseismos: engineering seismologist's toolbox.
 
+This file contains tests for DataMatrix object.
+
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
@@ -20,4 +22,4 @@ def test_loading_from_file(manually_crafted_segy_file):
 
     # check that time axis is constructed correctly
     assert dm.dt == 500
-    assert np.allttrue(dm.t == np.arange(0, 256, 0.5))
+    assert np.alltrue(dm.t == np.arange(0, 256, 0.5))

@@ -1,5 +1,7 @@
 """ philoseismos: engineering seismologist's toolbox.
 
+This file contains tests for constants used in philoseismos.segy.
+
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
