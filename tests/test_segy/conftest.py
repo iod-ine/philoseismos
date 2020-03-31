@@ -8,6 +8,10 @@ e-mail: io.dubrovin@icloud.com """
 import pytest
 import struct
 import numpy as np
+import pandas as pd
+
+from philoseismos.segy.g import Geometry
+from philoseismos.segy import constants as const
 
 
 @pytest.fixture(scope='package')
@@ -131,3 +135,34 @@ def manually_crafted_little_endian_segy_file(tmp_path_factory):
             sgy.write(tr_bytes)
 
     return path
+
+
+@pytest.fixture
+def geometry():
+    """ Return a hand-crafted Geometry object. """
+
+    table = pd.DataFrame(index=range(24), columns=const.THCOLS)
+
+    # elevations
+    table.loc[:, 'REC_ELEV'] = 100
+    table.loc[:, 'SOU_ELEV'] = 200
+    table.loc[:, 'DEPTH'] = 300
+    table.loc[:, 'REC_DATUM'] = 400
+    table.loc[:, 'SOU_DATUM'] = 500
+    table.loc[:, 'SOU_H2OD'] = 600
+    table.loc[:, 'REC_H2OD'] = 700
+
+    # coordinates
+    table.loc[:, 'SOU_X'] = -100
+    table.loc[:, 'SOU_Y'] = -100
+    table.loc[:, 'REC_X'] = -100
+    table.loc[:, 'REC_Y'] = -100
+    table.loc[:, 'CDP_X'] = -100
+    table.loc[:, 'CDP_Y'] = -100
+
+    table.fillna(0, inplace=True)
+
+    g = Geometry()
+    g._df = table
+
+    return g
