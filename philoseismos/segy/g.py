@@ -62,8 +62,8 @@ class Geometry:
         """ Apply elevation and coordinate scalars after unpacking. """
 
         # zero should be treated as one
-        self._df['ELEVSC'].loc[self._df['ELEVSC'] == 0] = 1
-        self._df['COORDSC'].loc[self._df['COORDSC'] == 0] = 1
+        self._df.replace({'ELEVSC', 0}, 1, inplace=True)
+        self._df.replace({'COORDSC', 0}, 1, inplace=True)
 
         # take the absolute value of the scalars
         abs_elevsc = abs(self._df.ELEVSC)
@@ -111,8 +111,8 @@ class Geometry:
         """ Apply elevation and coordinate scalars before packing. """
 
         # zero should be treated as one
-        self._df['ELEVSC'].loc[self._df['ELEVSC'] == 0] = 1
-        self._df['COORDSC'].loc[self._df['COORDSC'] == 0] = 1
+        self._df.replace({'ELEVSC', 0}, 1, inplace=True)
+        self._df.replace({'COORDSC', 0}, 1, inplace=True)
 
         # take the absolute value of the scalars
         abs_elevsc = abs(self._df.ELEVSC)
