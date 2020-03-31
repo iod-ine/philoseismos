@@ -48,6 +48,12 @@ def test_get_number_of_traces(manually_crafted_segy_file):
     assert isinstance(gfunc.get_number_of_traces(manually_crafted_segy_file), int)
 
 
+def test_get_sample_interval(manually_crafted_segy_file):
+    """ Test the general function for getting sample interval. """
+
+    assert gfunc.get_sample_interval(manually_crafted_segy_file) == 500
+
+
 # then are the tests for the `grab_` functions
 
 def test_grab_endiannes(manually_crafted_segy_file, manually_crafted_little_endian_segy_file):
@@ -122,6 +128,16 @@ def test_grab_number_of_traces(manually_crafted_segy_file):
 
         # the number of traces has to be an integer
         assert isinstance(gfunc.grab_number_of_traces(sgy), int)
+
+
+def test_grab_sample_interval(manually_crafted_little_endian_segy_file):
+    """ Test the general function for grabbing sample interval. """
+
+    with open(manually_crafted_little_endian_segy_file, 'br') as sgy:
+        sgy.seek(random.randint(0, 3600))
+        position = sgy.tell()
+        assert gfunc.grab_sample_interval(sgy) == 500
+        assert sgy.tell() == position
 
 
 def test_unpack_ibm32():

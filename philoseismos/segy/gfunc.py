@@ -114,6 +114,13 @@ def get_number_of_traces(file: str):
         return grab_number_of_traces(sgy)
 
 
+def get_sample_interval(file: str):
+    """ Return sample interval of the data in the file. """
+
+    with open(file, 'br') as sgy:
+        return grab_sample_interval(sgy)
+
+
 def grab_endiannes(opened_file):
     """ Grab endiannes of the file. """
 
@@ -171,6 +178,19 @@ def grab_number_of_traces(opened_file):
     opened_file.seek(position)
 
     return int((size - 3600) / (240 + tl * nb))
+
+
+def grab_sample_interval(opened_file):
+    """ Grab sample interval. """
+
+    endian = grab_endiannes(opened_file)
+
+    position = opened_file.tell()
+    opened_file.seek(3216)
+    si = opened_file.read(2)
+    opened_file.seek(position)
+
+    return struct.unpack(endian + 'h', si)[0]
 
 
 # functions to work with IBM values
