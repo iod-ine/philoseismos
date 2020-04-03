@@ -8,6 +8,7 @@ e-mail: io.dubrovin@icloud.com """
 
 import struct
 
+from philoseismos.segy import gfunc
 from philoseismos.segy import constants as const
 
 
@@ -31,15 +32,12 @@ class BinaryFileHeader:
         bfh = cls()
 
         with open(file, 'br') as sgy:
+            # get the endian
+            endian = gfunc.grab_endiannes(sgy)
+
             # skip the TFH, read the BFH bytes
             sgy.seek(3200)
             raw = sgy.read(400)
-
-        # check the endiannes
-        if 1 <= struct.unpack('>h', raw[24:26])[0] <= 16:
-            endian = '>'
-        else:
-            endian = '<'
 
         # unpack and store the values
         values = struct.unpack(endian + const.BFHFS, raw)

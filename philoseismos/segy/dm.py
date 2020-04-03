@@ -35,7 +35,7 @@ class DataMatrix:
             ss, fl, _ = const.SFC[sfc]
             dtype = const.DTYPEMAP[sfc]
 
-            dm._m = np.zeros(shape=(nt, tl), dtype=dtype)
+            dm._m = np.empty(shape=(nt, tl), dtype=dtype)
 
             sgy.seek(3600)
 

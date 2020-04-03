@@ -34,7 +34,6 @@ class Geometry:
             sgy.seek(3600)
 
             # create a matrix to store trace headers' values
-            print("ATTENTION", nt)
             data = np.empty(shape=(nt, 90), dtype=np.int32)
 
             for i in range(nt):

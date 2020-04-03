@@ -25,8 +25,8 @@ class TextualFileHeader:
 
         tfh = cls()
 
-        with open(file, 'br') as f:
-            tfh._contents = f.read(3200).decode('cp500')
+        with open(file, 'br') as sgy:
+            tfh._contents = sgy.read(3200).decode('cp500')
 
         return tfh
 
