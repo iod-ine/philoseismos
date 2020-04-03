@@ -3,6 +3,8 @@
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
+import pytest
+
 from philoseismos.models.layer import Layer
 
 
@@ -42,3 +44,31 @@ def test_add_layer(hlm):
     assert l.vs == 250
     assert l.rho == 1300
     assert l.h == 10
+
+
+def test_pop_layer(hlm):
+    """ Test the method for popping layers to the HorizontallyLayeredMedium. """
+
+    hlm.add_layer(100, 50, 1000, 10)
+    hlm.add_layer(200, 100, 1200, 5)
+    hlm.add_layer(300, 200, 1500, 15)
+    hlm.add_layer(500, 250, 1600, 20)
+
+    assert len(hlm._layers) == 4
+
+    layer = hlm.pop_layer(0)
+    assert len(hlm._layers) == 3
+    assert layer.vp == 100
+    assert layer.vs == 50
+
+    layer = hlm.pop_layer()
+    assert len(hlm._layers) == 2
+    assert layer.vp == 500
+    assert layer.vs == 250
+
+
+@pytest.mark.skip
+def test_export_to_segy_for_tesseral(hlm):
+    """ Test the method for exporting models for Tesseral in SEG-Y format. """
+
+    pass
