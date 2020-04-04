@@ -115,7 +115,7 @@ THCOLS = ['TRACENO',  # ordinal number of a trace
           'NUMSMP',  # number of samples in a trace (RadExPro needs this!)
           'DT',  # sample interval in microseconds (RadExPro needs this!)
           'IGAIN',  # code of the gain type of the instrument
-          'PREAMP',  # amplification coeefitient for instrument, dB
+          'PREAMP',  # amplification coefficient for instrument, dB
           'EARLYG',  # initial amplification of the instrument, dB
           'COR_FLAG',  # correlation flag (1 - no, 2 - yes)
           'SWEEPFREQSTART',  # starting frequency of the sweep, Hz
@@ -180,12 +180,12 @@ DTYPEMAP = {
 }
 
 IDTYPEMAP = {
-    np.float32: 5,
-    np.int32: 2,
-    np.int16: 3,
-    np.float64: 6,
-    np.int8: 8,
-    np.int64: 9,
-    np.uint32: 10,
-    np.uint16: 11
+    'float32': 5,
+    'int32': 2,
+    'int16': 3,
+    'float64': 6,
+    'int8': 8,
+    'int64': 9,
+    'uint32': 10,
+    'uint16': 11
 }

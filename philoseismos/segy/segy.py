@@ -76,3 +76,40 @@ class SegY:
         segy.file = file.split('/')[-1]
 
         return segy
+
+    @classmethod
+    def from_matrix(cls, matrix, sample_interval=500):
+        """ Create a SegY object from a matrix.
+
+        Args:
+            matrix: A numpy matrix where each row is a trace and each column is a sample.
+            sample_interval (int): Sample interval in microseconds.
+
+        Notes:
+            The needed sample format is detected from the matrix's dtype property.
+
+        """
+
+        segy = cls()
+
+        segy.dm._m = matrix
+        segy.dm.dt = sample_interval
+        segy.dm.t = np.arange(0, sample_interval * matrix.shape[1] / 1000, sample_interval / 1000)
+
+        segy.bfh['sample_format'] = const.IDTYPEMAP[matrix.dtype.name]
+        segy.bfh['sample_interval'] = sample_interval
+        segy.bfh['samples_per_trace'] = matrix.shape[1]
+        segy.bfh['measurement_system'] = 1
+        segy.bfh['byte_offset_of_data'] = 3600
+        segy.bfh['no_traces'] = matrix.shape[0]
+
+        segy.g._df = pd.DataFrame(index=range(matrix.shape[0]), columns=const.THCOLS)
+        segy.g.loc[:, 'TRACENO'] = np.arange(1, matrix.shape[0] + 1, 1)
+        segy.g.loc[:, 'FFID'] = 1
+        segy.g.loc[:, 'CHAN'] = np.arange(1, matrix.shape[0] + 1, 1)
+        segy.g.loc[:, 'ELEVSC'] = -100
+        segy.g.loc[:, 'COORDSC'] = -100
+        segy.g.loc[:, 'NUMSMP'] = matrix.shape[1]
+        segy.g.loc[:, 'DT'] = sample_interval
+
+        return segy
