@@ -18,7 +18,7 @@ class BinaryFileHeader:
     def __init__(self):
         """ Create a new BFH object. """
 
-        self._dict = None
+        self._dict = dict(zip(const.BFHCOLS, [0 for i in range(90)]))
 
     @classmethod
     def load(cls, file: str):
@@ -45,5 +45,20 @@ class BinaryFileHeader:
 
         return bfh
 
+    def __repr__(self):
+        out = ''
+        for k, v in filter(lambda x: x[1] != 0, self._dict.items()):
+            out += f'{k:<25}{v:>5}\n'
+        return out
+
     def __getitem__(self, key):
         return self._dict.get(key)
+
+    def __setitem__(self, key, value):
+        if not isinstance(value, int):
+            raise ValueError('All the values in the BFH have to be integers.')
+
+        if key not in const.BFHCOLS:
+            raise ValueError('That key is not in the BFH values.')
+
+        self._dict[key] = value
