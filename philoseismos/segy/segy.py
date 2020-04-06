@@ -79,8 +79,14 @@ class SegY:
             segy.dm._m = np.empty(shape=(nt, tl), dtype=dtype)
 
             if sfc == 1:  # IBM is a special case
-                # TODO: add IBM loading
-                pass
+                for i in range(nt):
+                    raw_header = sgy.read(240)
+                    header = struct.unpack(endian + const.THFS, raw_header[:232])
+                    header_data[i] = header
+
+                    raw_trace = sgy.read(ss * tl)
+                    trace_values = gfunc.unpack_ibm32_series(raw_trace, endian)
+                    segy.dm._m[i] = trace_values
             else:
                 trace_fs = endian + fl * tl
 
