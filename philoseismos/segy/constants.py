@@ -54,6 +54,7 @@ BFHCOLS += ['segy_revision_major',
             'no_traces',
             'byte_offset_of_data',
             'no_trailer_stanzas']
+BFHCOLS += [f'unassigned_{i}' for i in range(51, 68)]
 
 # sample format code dictionary. maps codes to (size, format letter, description)
 SFC = {

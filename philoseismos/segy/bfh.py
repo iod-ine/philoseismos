@@ -7,6 +7,7 @@ author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
 import struct
+from collections import OrderedDict
 
 from philoseismos.segy import gfunc
 from philoseismos.segy import constants as const
@@ -18,7 +19,7 @@ class BinaryFileHeader:
     def __init__(self):
         """ Create a new BFH object. """
 
-        self._dict = dict(zip(const.BFHCOLS, [0 for i in range(90)]))
+        self._dict = OrderedDict(zip(const.BFHCOLS, [0] * 111))
 
     @classmethod
     def load(cls, file: str):
