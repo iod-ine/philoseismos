@@ -169,7 +169,7 @@ THCOLS = ['TRACENO',  # ordinal number of a trace
 
 # dictionaries to map sample format code to data matrix dtype
 DTYPEMAP = {
-    1: np.float64,
+    1: np.float32,
     2: np.int32,
     3: np.int16,
     5: np.float32,

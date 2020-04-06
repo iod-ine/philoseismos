@@ -236,7 +236,7 @@ def pack_ibm32(value: float, endian: str) -> bytes:
     return struct.pack(endian + 'L', uint)
 
 
-def unpack_ibm32_series(data: bytearray, endian: str) -> tuple:
+def unpack_ibm32_series(data: bytes, endian: str) -> tuple:
     """ Unpacks a bytearray containing multiple IBM values. """
 
     out = []
