@@ -19,6 +19,8 @@ from philoseismos.segy import constants as const
 class SegY:
     """ This object represents a SEG-Y file. """
 
+    # TODO: add saving as IBM
+
     def __init__(self):
         self.tfh = TextualFileHeader()
         self.bfh = BinaryFileHeader()
@@ -33,10 +35,14 @@ class SegY:
         Args:
             file (str): Path to the file.
 
+        Notes:
+            By default, float32 matrices will be saved as non-IBM floats. To save as IBM instead,
+            manually set 'sample_format' BFH value to 1.
+
         """
 
         header_fs = '>' + const.THFS
-        trace_fs = '>' + const.SFC[self.bfh['sample_format']][1] * self.bfh['samples_per_trace']
+        sfc = self.bfh['sample_format']
 
         self.g._apply_scalars_before_packing()
 
@@ -47,13 +53,23 @@ class SegY:
             raw_bfh = struct.pack('>' + const.BFHFS, *bfh_values)
             sgy.write(raw_bfh)
 
-            for i in range(self.bfh['no_traces']):
-                raw_th = bytearray(240)
-                raw_th[:232] = struct.pack(header_fs, *self.g.loc[i, :].values.astype(int))
-                sgy.write(raw_th)
+            if sfc == 1:
+                for i in range(self.bfh['no_traces']):
+                    raw_th = bytearray(240)
+                    raw_th[:232] = struct.pack(header_fs, *self.g.loc[i, :].values.astype(int))
+                    sgy.write(raw_th)
 
-                raw_trace = struct.pack(trace_fs, *self.dm._m[i])
-                sgy.write(raw_trace)
+                    raw_trace = gfunc.pack_ibm32_series(self.dm._m[i], '>')
+                    sgy.write(raw_trace)
+            else:
+                trace_fs = '>' + const.SFC[sfc][1] * self.bfh['samples_per_trace']
+                for i in range(self.bfh['no_traces']):
+                    raw_th = bytearray(240)
+                    raw_th[:232] = struct.pack(header_fs, *self.g.loc[i, :].values.astype(int))
+                    sgy.write(raw_th)
+
+                    raw_trace = struct.pack(trace_fs, *self.dm._m[i])
+                    sgy.write(raw_trace)
 
         self.g._apply_scalars_after_unpacking()
 
