@@ -12,7 +12,7 @@ class TextualFileHeader:
     def __init__(self):
         """ Create a new TFH object. """
 
-        self._contents = None
+        self._contents = ' ' * 3200
 
     @classmethod
     def load(cls, file: str):
