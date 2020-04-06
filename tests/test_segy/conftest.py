@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from philoseismos.segy.g import Geometry
+from philoseismos.segy import gfunc
 from philoseismos.segy import constants as const
 
 
@@ -132,6 +133,59 @@ def manually_crafted_little_endian_segy_file(tmp_path_factory):
             sgy.write(tr_hdr)
             tr_val = np.ones(512, dtype=np.int16) + i * 2
             tr_bytes = struct.pack('<' + 'h' * 512, *tr_val)
+            sgy.write(tr_bytes)
+
+    return path
+
+
+@pytest.fixture(scope='package')
+def manually_crafted_ibm_segy_file(tmp_path_factory):
+    """ Return a path to a manually crafted SEG-Y (R4 IBM) file to run tests against.
+
+    File produced by this code was checked in SeiSee, RadExPro, and Prism 2.
+    It is opened and interpreted as intended by all three of these programs.
+
+    """
+
+    path = str(tmp_path_factory.mktemp('manual') / 'test_segy.sgy')
+
+    with open(path, 'bw') as sgy:
+        # empty TFH
+        sgy.write(bytes(3200))
+
+        # same BFH
+        bfh = bytearray(400)
+        bfh[0:4] = struct.pack('>i', 666)  # job id
+        bfh[16:18] = struct.pack('>h', 500)  # sample interval in microseconds
+        bfh[20:22] = struct.pack('>h', 512)  # number of samples per trace
+        bfh[24:26] = struct.pack('>h', 1)  # sample format code
+        sgy.write(bfh)
+
+        # same trace headers
+        tr_hdr = bytearray(240)
+        tr_hdr[8:12] = struct.pack('>i', 375)  # FFID - original field record number
+        tr_hdr[68:70] = struct.pack('>h', -100)  # ELEVSC - scalar to apply to all elevations
+        tr_hdr[70:72] = struct.pack('>h', -100)  # COORDSC - scalar to apply to all coordinates
+        tr_hdr[72:76] = struct.pack('>i', 50 * 100)  # SOU_X, with scalar applied
+        tr_hdr[76:80] = struct.pack('>i', 75 * 100)  # SOU_Y, with scalar applied
+        tr_hdr[84:88] = struct.pack('>i', -1 * 100)  # REC_Y, with scalar applied
+        tr_hdr[114:116] = struct.pack('>h', 512)  # NUMSMP - number of samples in a trace
+        tr_hdr[116:118] = struct.pack('>h', 500)  # DT - sample interval for this trace in microseconds
+        tr_hdr[156:158] = struct.pack('>h', 1984)  # YEAR
+        tr_hdr[160:162] = struct.pack('>h', 10)  # HOUR
+        tr_hdr[162:164] = struct.pack('>h', 51)  # MINUTE
+        tr_hdr[184:188] = struct.pack('>i', 37 * 100)  # CDP_Y, with scalar applied
+
+        for i in range(24):
+            tr_hdr[0:4] = struct.pack('>i', i + 1)  # trace number within a line
+            tr_hdr[4:8] = struct.pack('>i', i + 1)  # trace number within a file
+            tr_hdr[80:84] = struct.pack('>i', i * 2 * 100)  # REC_X, with scalar applied
+            tr_hdr[180:184] = struct.pack('>i', int((50 + i * 2) / 2 * 100))  # CDP_X, with scalar applied
+            sgy.write(tr_hdr)
+
+            # trace is packed using IBM functions from segy.gfunc
+            tr_val = np.ones(512, dtype=np.float32) + i * 3
+            tr_bytes = gfunc.pack_ibm32_series(tr_val, '>')
             sgy.write(tr_bytes)
 
     return path
