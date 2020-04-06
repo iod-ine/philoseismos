@@ -27,6 +27,36 @@ class SegY:
 
         self.file = None
 
+    def save(self, file: str):
+        """ Save the SegY to a file.
+
+        Args:
+            file (str): Path to the file.
+
+        """
+
+        header_fs = '>' + const.THFS
+        trace_fs = '>' + const.SFC[self.bfh['sample_format']][1] * self.bfh['samples_per_trace']
+
+        self.g._apply_scalars_before_packing()
+
+        with open(file, 'bw') as sgy:
+            sgy.write(self.tfh._contents.encode('cp500'))
+
+            bfh_values = self.bfh._dict.values()
+            raw_bfh = struct.pack('>' + const.BFHFS, *bfh_values)
+            sgy.write(raw_bfh)
+
+            for i in range(self.bfh['no_traces']):
+                raw_th = bytearray(240)
+                raw_th[:232] = struct.pack(header_fs, *self.g.loc[i, :].values.astype(int))
+                sgy.write(raw_th)
+
+                raw_trace = struct.pack(trace_fs, *self.dm._m[i])
+                sgy.write(raw_trace)
+
+        self.g._apply_scalars_after_unpacking()
+
     @classmethod
     def load(cls, file: str):
         """ Load the SEG-Y file. """
@@ -49,6 +79,7 @@ class SegY:
             segy.dm._m = np.empty(shape=(nt, tl), dtype=dtype)
 
             if sfc == 1:  # IBM is a special case
+                # TODO: add IBM loading
                 pass
             else:
                 trace_fs = endian + fl * tl
@@ -111,5 +142,7 @@ class SegY:
         segy.g.loc[:, 'COORDSC'] = -100
         segy.g.loc[:, 'NUMSMP'] = matrix.shape[1]
         segy.g.loc[:, 'DT'] = sample_interval
+
+        segy.g._df.fillna(0, inplace=True)
 
         return segy
