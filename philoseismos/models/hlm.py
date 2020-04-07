@@ -38,9 +38,35 @@ class HorizontallyLayeredMedium:
         self._layers.append(Layer(vp, vs, rho, h))
 
     def pop_layer(self, index=-1):
-        """ Remove and return item at index (default last). """
+        """ Remove and return layer at index (default last). """
 
         return self._layers.pop(index)
+
+    def get_profiles(self, half_space_depth=10):
+        """ Return profiles of all the parameters to plot.
+
+        Returns:
+            z, vp, vs, rho: Matplotlib-ready parameter profiles.
+
+        """
+
+        z = [0]
+        vp = []
+        vs = []
+        rho = []
+
+        for layer in reversed(self._layers):
+            z += [z[-1] + layer.h] * 2
+            vp += [layer.vp] * 2
+            vs += [layer.vs] * 2
+            rho += [layer.rho] * 2
+
+        z += [z[-1] + half_space_depth]
+        vp += [self.vp] * 2
+        vs += [self.vs] * 2
+        rho += [self.rho] * 2
+
+        return z, vp, vs, rho
 
     def __repr__(self):
         return f'HorizontallyLayeredMedium(vp={self.vp}, vs={self.vs}, rho={self.rho})'

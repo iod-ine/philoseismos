@@ -72,3 +72,26 @@ def test_export_to_segy_for_tesseral(hlm):
     """ Test the method for exporting models for Tesseral in SEG-Y format. """
 
     pass
+
+
+def test_get_profiles(hlm):
+    """ Test the method for getting parameter profiles to plot. """
+
+    z, vp, vs, rho = hlm.get_profiles()
+    assert z == [0, 10]
+    assert vp == [1500, 1500]
+    assert vs == [750, 750]
+    assert rho == [2000, 2000]
+
+    hlm.add_layer(400, 200, 1500, 10)
+    z, vp, vs, rho = hlm.get_profiles(half_space_depth=20)
+    assert z == [0, 10, 10, 30]
+    assert vp == [400, 400, 1500, 1500]
+    assert vs == [200, 200, 750, 750]
+
+    hlm.add_layer(200, 100, 1000, 20)
+    z, vp, vs, rho = hlm.get_profiles(half_space_depth=5)
+    assert z == [0, 20, 20, 30, 30, 35]
+    assert vp == [200, 200, 400, 400, 1500, 1500]
+    assert vs == [100, 100, 200, 200, 750, 750]
+    assert rho == [1000, 1000, 1500, 1500, 2000, 2000]
