@@ -13,6 +13,7 @@ coverage = "*"
 numpy = "*"
 pandas = "*"
 scipy = "*"
+sympy = "*"
 
 [requires]
 python_version = "3.7"
