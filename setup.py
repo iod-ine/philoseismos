@@ -10,7 +10,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     name='philoseismos',
-    version='0.0.1_alpha',
+    version='0.0.2_alpha',
     author="Ivan Dubrovin",
     author_email="io.dubrovin@icloud.com",
     description="Engineering seismologist's toolbox",
@@ -18,6 +18,12 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/iod-ine/philoseismos",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'numpy',
+        'pandas',
+        'scipy',
+        'sympy',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
