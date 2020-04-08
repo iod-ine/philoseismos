@@ -103,15 +103,18 @@ def rayleigh_fundamental_mode(medium, freqs):
 
     roots = []
 
+    half_min_beta = min([layer.vs for layer in medium._layers] + [medium.vs]) / 2
+    max_beta = max([layer.vs for layer in medium._layers] + [medium.vs])
+
     for f in freqs:
-        guess = min([layer.vs for layer in medium._layers] + [medium.vs]) / 2
+        guess = half_min_beta
 
         def dispersion_function(c):
             return rayleigh_dispersion_function(medium, c, f)
 
         sign_ = sign(dispersion_function(guess))
 
-        while guess < max([layer.vs for layer in medium._layers] + [medium.vs]):
+        while guess < max_beta:
             if sign(dispersion_function(guess)) != sign_:
                 root = optimize.bisect(dispersion_function, guess - 1, guess)
                 roots.append(root)
