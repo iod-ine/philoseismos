@@ -19,8 +19,6 @@ from philoseismos.segy import constants as const
 class SegY:
     """ This object represents a SEG-Y file. """
 
-    # TODO: add saving as IBM
-
     def __init__(self):
         self.tfh = TextualFileHeader()
         self.bfh = BinaryFileHeader()
@@ -119,6 +117,8 @@ class SegY:
 
         bfh_values = struct.unpack(endian + const.BFHFS, raw_bfh)
         segy.bfh._dict = dict(zip(const.BFHCOLS, bfh_values))
+
+        segy.bfh['no_traces'] = nt
 
         segy.g._df = pd.DataFrame(header_data, index=range(nt), columns=const.THCOLS)
         segy.g._apply_scalars_after_unpacking()

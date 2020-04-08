@@ -62,6 +62,9 @@ def test_loading_from_file(manually_crafted_segy_file):
     # keep the name of the file
     assert segy.file == manually_crafted_segy_file.split('/')[-1]
 
+    # empty BFH values are filled automatically
+    assert segy.bfh['no_traces'] == 24
+
 
 def test_loading_from_little_endian_file(manually_crafted_little_endian_segy_file):
     """ Test the method for loading SEG-Y files with little-endian byte-order. """
@@ -101,6 +104,9 @@ def test_loading_from_little_endian_file(manually_crafted_little_endian_segy_fil
     # keep the name of the file
     assert segy.file == manually_crafted_little_endian_segy_file.split('/')[-1]
 
+    # empty BFH values are filled automatically
+    assert segy.bfh['no_traces'] == 24
+
 
 def test_loading_from_ibm_file(manually_crafted_ibm_segy_file):
     """ Test the method for loading SEG-Y files with IBM trace encoding. """
@@ -139,6 +145,9 @@ def test_loading_from_ibm_file(manually_crafted_ibm_segy_file):
 
     # keep the name of the file
     assert segy.file == manually_crafted_ibm_segy_file.split('/')[-1]
+
+    # empty BFH values are filled automatically
+    assert segy.bfh['no_traces'] == 24
 
 
 def test_saving_to_file(tmp_path):
