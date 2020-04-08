@@ -156,3 +156,163 @@ class Geometry:
         self._df.loc[pos_coordsc_ind, 'REC_Y'] /= abs_coordsc
         self._df.loc[pos_coordsc_ind, 'CDP_X'] /= abs_coordsc
         self._df.loc[pos_coordsc_ind, 'CDP_Y'] /= abs_coordsc
+
+    @property
+    def TRACENO(self):
+        return self._df.TRACENO
+
+    @TRACENO.setter
+    def TRACENO(self, val):
+        self._df.loc[:, 'TRACENO'] = val
+
+    @property
+    def FFID(self):
+        return self._df.FFID
+
+    @FFID.setter
+    def FFID(self, val):
+        self._df.loc[:, 'FFID'] = val
+
+    @property
+    def CHAN(self):
+        return self._df.CHAN
+
+    @CHAN.setter
+    def CHAN(self, val):
+        self._df.loc[:, 'CHAN'] = val
+
+    @property
+    def SOU_X(self):
+        return self._df.SOU_X
+
+    @SOU_X.setter
+    def SOU_X(self, val):
+        self._df.loc[:, 'SOU_X'] = val
+
+    @property
+    def SOU_Y(self):
+        return self._df.SOU_Y
+
+    @SOU_Y.setter
+    def SOU_Y(self, val):
+        self._df.loc[:, 'SOU_Y'] = val
+
+    @property
+    def REC_X(self):
+        return self._df.REC_X
+
+    @REC_X.setter
+    def REC_X(self, val):
+        self._df.loc[:, 'REC_X'] = val
+
+    @property
+    def REC_Y(self):
+        return self._df.REC_Y
+
+    @REC_Y.setter
+    def REC_Y(self, val):
+        self._df.loc[:, 'REC_Y'] = val
+
+    @property
+    def CDP_X(self):
+        return self._df.CDP_X
+
+    @CDP_X.setter
+    def CDP_X(self, val):
+        self._df.loc[:, 'CDP_X'] = val
+
+    @property
+    def CDP_Y(self):
+        return self._df.CDP_Y
+
+    @CDP_Y.setter
+    def CDP_Y(self, val):
+        self._df.loc[:, 'CDP_Y'] = val
+
+    @property
+    def CDP(self):
+        return self._df.CDP
+
+    @CDP.setter
+    def CDP(self, val):
+        self._df.loc[:, 'CDP'] = val
+
+    @property
+    def OFFSET(self):
+        return self._df.OFFSET
+
+    @OFFSET.setter
+    def OFFSET(self, val):
+        self._df.loc[:, 'OFFSET'] = val
+
+    @property
+    def REC_ELEV(self):
+        return self._df.REC_ELEV
+
+    @REC_ELEV.setter
+    def REC_ELEV(self, val):
+        self._df.loc[:, 'REC_ELEV'] = val
+
+    @property
+    def SOU_ELEV(self):
+        return self._df.SOU_ELEV
+
+    @SOU_ELEV.setter
+    def SOU_ELEV(self, val):
+        self._df.loc[:, 'SOU_ELEV'] = val
+
+    @property
+    def ELEVSC(self):
+        return self._df.ELEVSC
+
+    @ELEVSC.setter
+    def ELEVSC(self, val):
+        self._df.loc[:, 'ELEVSC'] = val
+
+    @property
+    def COORDSC(self):
+        return self._df.COORDSC
+
+    @COORDSC.setter
+    def COORDSC(self, val):
+        self._df.loc[:, 'COORDSC'] = val
+
+    @property
+    def YEAR(self):
+        return self._df.YEAR
+
+    @YEAR.setter
+    def YEAR(self, val):
+        self._df.loc[:, 'YEAR'] = val
+
+    @property
+    def DAY(self):
+        return self._df.DAY
+
+    @DAY.setter
+    def DAY(self, val):
+        self._df.loc[:, 'DAY'] = val
+
+    @property
+    def HOUR(self):
+        return self._df.HOUR
+
+    @HOUR.setter
+    def HOUR(self, val):
+        self._df.loc[:, 'HOUR'] = val
+
+    @property
+    def MINUTE(self):
+        return self._df.MINUTE
+
+    @MINUTE.setter
+    def MINUTE(self, val):
+        self._df.loc[:, 'MINUTE'] = val
+
+    @property
+    def SECOND(self):
+        return self._df.SECOND
+
+    @SECOND.setter
+    def SECOND(self, val):
+        self._df.loc[:, 'SECOND'] = val

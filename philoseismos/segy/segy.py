@@ -125,6 +125,7 @@ class SegY:
 
         segy.dm.dt = si
         segy.dm.t = np.arange(0, si * tl / 1000, si / 1000)
+        segy.dm._headers = segy.g
 
         segy.file = file.split('/')[-1]
 
