@@ -4,6 +4,7 @@ author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
 from philoseismos.models.layer import Layer
+from philoseismos.dispersion.di import RayleighDispersionCurve
 
 
 class HorizontallyLayeredMedium:
@@ -67,6 +68,11 @@ class HorizontallyLayeredMedium:
         rho += [self.rho] * 2
 
         return z, vp, vs, rho
+
+    def rayleigh_dispersion_image(self, freqs):
+        """ Return a new Rayleigh Dispersion Image object for this medium. """
+
+        return RayleighDispersionCurve(self, freqs)
 
     def __repr__(self):
         return f'HorizontallyLayeredMedium(vp={self.vp}, vs={self.vs}, rho={self.rho})'

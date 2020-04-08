@@ -9,7 +9,7 @@ from scipy import optimize
 from philoseismos.dispersion.rayleigh import rayleigh_fundamental_mode, rayleigh_dispersion_function
 
 
-class RayleighDispersionImage:
+class RayleighDispersionCurve:
 
     def __init__(self, medium, freqs):
         """ Create a new Rayleigh Dispersion Image. """
