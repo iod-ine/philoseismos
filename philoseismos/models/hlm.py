@@ -24,7 +24,6 @@ class HorizontallyLayeredMedium:
             vs: S-wave velocity in a half space in m/s.
             rho: Density of the half-space in kg/m^3.
 
-
         """
 
         self.vp = vp
@@ -69,7 +68,7 @@ class HorizontallyLayeredMedium:
 
         return z, vp, vs, rho
 
-    def rayleigh_dispersion_image(self, freqs):
+    def rayleigh_dispersion_curve(self, freqs):
         """ Return a new Rayleigh Dispersion Image object for this medium. """
 
         return RayleighDispersionCurve(self, freqs)
