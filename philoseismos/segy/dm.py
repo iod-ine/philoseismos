@@ -57,5 +57,16 @@ class DataMatrix:
 
         return dm
 
+    def extract(self, indices):
+        """ Return a new DM, constructed from traces extracted by given indices. """
+
+        new = DataMatrix()
+        new.dt = np.copy(self.dt)
+        new.t = np.copy(self.t)
+        new._m = np.copy(self._m[indices])
+        new._headers = self._headers.loc[indices, :].copy()
+
+        return new
+
     def __repr__(self):
         return f'DataMatrix: {self._m.shape[0]} traces, {self._m.shape[1]} samples, dt={self.dt}'
