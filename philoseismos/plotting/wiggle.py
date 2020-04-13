@@ -20,7 +20,7 @@ def wiggle_dm_into(data_matrix, ax, norm=True):
         j = i + 1
 
         if norm and not np.all(trace == 0):
-            trace /= np.abs(trace).max() * 0.5
+            trace /= np.abs(trace).max() * 2
 
         ax.plot(trace + j, data_matrix.t, color='k')
         ax.fill_betweenx(data_matrix.t, trace + j, j,
