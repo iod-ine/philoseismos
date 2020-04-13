@@ -24,3 +24,10 @@ class Layer:
         self.h = h
         self.vp = vp if vp else vs * math.sqrt(3)  # assume that Lame parameters are equal and vp = vs * sqrt(3)
         self.rho = rho if rho else 310 * self.vp ** 0.25  # use the Gardner's relation to compute rho
+
+    def __repr__(self):
+        vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
+        vs = f'vs={self.vs}' if self.vs == int(self.vs) else f'vs≈{round(self.vs)}'
+        rho = f'rho={self.rho}' if self.rho == int(self.rho) else f'rho≈{round(self.rho)}'
+        h = f'h={self.h}' if self.h == round(self.h, 2) else f'h≈{round(self.h, 2)}'
+        return f'Layer({vp}, {vs}, {rho}, {h})'

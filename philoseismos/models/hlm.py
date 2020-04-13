@@ -36,10 +36,10 @@ class HorizontallyLayeredMedium:
 
         self._layers = []
 
-    def add_layer(self, vp, vs, rho, h):
+    def add_layer(self, *, vp=None, vs=300, rho=None, h=10):
         """ Add a layer on top of the medium. """
 
-        self._layers.append(Layer(vp, vs, rho, h))
+        self._layers.append(Layer(vp=vp, vs=vs, rho=rho, h=h))
 
     def pop_layer(self, index=-1):
         """ Remove and return layer at index (default last). """
@@ -78,13 +78,23 @@ class HorizontallyLayeredMedium:
         return RayleighDispersionCurve(self, freqs)
 
     def __repr__(self):
-        return f'HorizontallyLayeredMedium(vp={self.vp}, vs={self.vs}, rho={self.rho})'
+        vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
+        vs = f'vs={self.vs}' if self.vs == int(self.vs) else f'vs≈{round(self.vs)}'
+        rho = f'rho={self.rho}' if self.rho == int(self.rho) else f'rho≈{round(self.rho)}'
+        return f'HorizontallyLayeredMedium({vp}, {vs}, {rho})'
 
     def __str__(self):
         out = ''
 
         for i, l in enumerate(reversed(self._layers)):
-            out += f'Layer #{i}: vp={l.vp} vs={l.vs} rho={l.rho} h={l.h}\n'
+            vp = f'vp={l.vp}' if l.vp == int(l.vp) else f'vp≈{round(l.vp)}'
+            vs = f'vs={l.vs}' if l.vs == int(l.vs) else f'vs≈{round(l.vs)}'
+            rho = f'rho={l.rho}' if l.rho == int(l.rho) else f'rho≈{round(l.rho)}'
+            h = f'h={l.h}' if l.h == round(l.h, 2) else f'h≈{round(l.h, 2)}'
+            out += f'Layer #{i}: {vp} {vs} {rho} {h}\n'
 
-        out += f'Half-space: vp={self.vp} vs={self.vs} rho={self.rho}'
+        vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
+        vs = f'vs={self.vs}' if self.vs == int(self.vs) else f'vs≈{round(self.vs)}'
+        rho = f'rho={self.rho}' if self.rho == int(self.rho) else f'rho≈{round(self.rho)}'
+        out += f'Half-space: {vp} {vs} {rho}'
         return out
