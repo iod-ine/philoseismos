@@ -3,6 +3,8 @@
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
+import math
+
 from philoseismos.models.layer import Layer
 from philoseismos.dispersion.rdc import RayleighDispersionCurve
 
@@ -16,8 +18,10 @@ class HorizontallyLayeredMedium:
 
      """
 
-    def __init__(self, vp, vs, rho):
+    def __init__(self, *, vp=None, vs=1000, rho=None):
         """ Create a new HorizontallyLayeredMedium.
+
+        Only accepts keyword arguments. Vp and Rho will be computed automatically if no provided.
 
         Args:
             vp: P-wave velocity in the half-space in m/s.
@@ -26,9 +30,9 @@ class HorizontallyLayeredMedium:
 
         """
 
-        self.vp = vp
         self.vs = vs
-        self.rho = rho
+        self.vp = vp if vp else vs * math.sqrt(3)  # assume that Lame parameters are equal and vp = vs * sqrt(3)
+        self.rho = rho if rho else 310 * self.vp ** 0.25  # use the Gardner's relation to compute rho
 
         self._layers = []
 
