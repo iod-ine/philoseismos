@@ -6,4 +6,4 @@ e-mail: io.dubrovin@icloud.com """
 from philoseismos.segy.segy import SegY
 
 from philoseismos.models.hlm import HorizontallyLayeredMedium
-from philoseismos.dispersion.di import RayleighDispersionCurve
+from philoseismos.dispersion.rdc import RayleighDispersionCurve

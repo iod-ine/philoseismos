@@ -4,7 +4,7 @@ author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
 from philoseismos.models.layer import Layer
-from philoseismos.dispersion.di import RayleighDispersionCurve
+from philoseismos.dispersion.rdc import RayleighDispersionCurve
 
 
 class HorizontallyLayeredMedium:
