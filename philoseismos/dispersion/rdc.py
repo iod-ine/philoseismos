@@ -27,6 +27,26 @@ class RayleighDispersionCurve:
         for i in range(n - 1):
             self._calculate_next_mode()
 
+    def export_modal_curves_for_radex(self, filename, *, sou_x=500, rec_x_0, rec_x_1):
+        """ Export modal curves to a text file accepted by MASW module in RadExPro. """
+
+        with open(filename, 'w') as txt:
+            txt.write(f'{sou_x} {rec_x_0} {rec_x_1}\n')  # geometry of the survey
+
+            # write the fundamental curve
+            txt.write('True\n')  # is this curve displayed on the DI?
+            txt.write(f'{len(self.freqs)}\n')  # how many points are in this curve?
+            for f, v in zip(self.freqs, self.modal_curves[0]):  # write all freq-val pairs
+                txt.write(f'{f}\t{v}\n')
+
+            txt.write(f'{len(self.modal_curves) - 1}\n')  # how many additional modal curves are in the file?
+
+            for curve in self.modal_curves[1:]:  # write the rest of the curves
+                txt.write('True\n')
+                txt.write(f'{len(curve)}\n')
+                for f, v in zip(self.freqs, curve):
+                    txt.write(f'{f}\t{v}\n')
+
     def _calculate_fundamental_mode(self):
         """ Calculate the fundamental Rayleigh mode. """
 
