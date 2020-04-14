@@ -5,6 +5,7 @@ e-mail: io.dubrovin@icloud.com """
 
 from sympy import sin, cos, sqrt, pi, Matrix, sign, nan
 from scipy import optimize
+from tqdm import tqdm
 
 
 def rayleigh_layer_matrix(layer, c, f):
@@ -106,7 +107,7 @@ def rayleigh_fundamental_mode(medium, freqs):
     half_min_beta = min([layer.vs for layer in medium._layers] + [medium.vs]) / 2
     max_beta = max([layer.vs for layer in medium._layers] + [medium.vs])
 
-    for f in freqs:
+    for f in tqdm(freqs):
         guess = half_min_beta
 
         def dispersion_function(c):

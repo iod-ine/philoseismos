@@ -5,6 +5,7 @@ e-mail: io.dubrovin@icloud.com """
 
 import numpy as np
 from scipy import optimize
+from tqdm import tqdm
 
 from philoseismos.dispersion.rayleigh import rayleigh_fundamental_mode, rayleigh_dispersion_function
 
@@ -41,7 +42,7 @@ class RayleighDispersionCurve:
         max_beta = max([layer.vs for layer in self.medium._layers] + [self.medium.vs])
         roots = []
 
-        for f, c_prev in zip(self.freqs, self.modal_curves[-1]):
+        for f, c_prev in tqdm(zip(self.freqs, self.modal_curves[-1])):
 
             if np.isnan(c_prev):
                 roots.append(np.nan)
