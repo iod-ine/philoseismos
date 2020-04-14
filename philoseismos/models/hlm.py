@@ -103,9 +103,14 @@ class HorizontallyLayeredMedium:
         vss = np.empty_like(zz, dtype=np.float32)
         rhos = np.empty_like(zz, dtype=np.float32)
 
-        vps[:, 0] = self._layers[-1].vp
-        vss[:, 0] = self._layers[-1].vs
-        rhos[:, 0] = self._layers[-1].rho
+        if self._layers:
+            vps[:, 0] = self._layers[-1].vp
+            vss[:, 0] = self._layers[-1].vs
+            rhos[:, 0] = self._layers[-1].rho
+        else:
+            vps[:, 0] = self.vp
+            vss[:, 0] = self.vs
+            rhos[:, 0] = self.rho
 
         depth = 0
         for layer in reversed(self._layers):
