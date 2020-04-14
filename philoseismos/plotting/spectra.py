@@ -8,14 +8,14 @@ import numpy as np
 from philoseismos.processing.spectra import average_spectrum_of_dm, dispersion_image_of_dm
 
 
-def plot_average_spectrum_of_dm_into(data_matrix, ax):
+def plot_average_spectrum_of_dm_into(data_matrix, ax, fill=True):
     """ Plot the average spectrum of given DM into given Axes. """
 
     freq, amps = average_spectrum_of_dm(data_matrix)
-    ax.fill_between(freq, amps)
+    return ax.fill_between(freq, amps) if fill else ax.plot(freq, amps)
 
 
-def plot_dispersion_image_of_dm_into(data_matrix, ax, c_max=1200, c_min=1, c_step=1, f_max=150):
+def imshow_dispersion_image_of_dm_into(data_matrix, ax, c_max=1200, c_min=1, c_step=1, f_max=150):
     """ Plot the dispersion image of given DM into given Axes.
 
     Args:
@@ -32,6 +32,6 @@ def plot_dispersion_image_of_dm_into(data_matrix, ax, c_max=1200, c_min=1, c_ste
     """
 
     V = dispersion_image_of_dm(data_matrix, c_max, c_min, c_step, f_max)
-    image = ax.imshow(np.abs(V), aspect='auto', interpolation='spline36')
+    image = ax.imshow(np.abs(V), aspect='auto', interpolation='spline36', extent=[0, f_max, c_min, c_max])
 
     return image
