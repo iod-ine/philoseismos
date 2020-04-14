@@ -3,10 +3,11 @@
 author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
-import math
+import numpy as np
 
 from philoseismos.models.layer import Layer
 from philoseismos.dispersion.rdc import RayleighDispersionCurve
+from philoseismos.segy.segy import SegY
 
 
 class HorizontallyLayeredMedium:
@@ -31,7 +32,7 @@ class HorizontallyLayeredMedium:
         """
 
         self.vs = vs
-        self.vp = vp if vp else vs * math.sqrt(3)  # assume that Lame parameters are equal and vp = vs * sqrt(3)
+        self.vp = vp if vp else vs * np.sqrt(3)  # assume that Lame parameters are equal and vp = vs * sqrt(3)
         self.rho = rho if rho else 310 * self.vp ** 0.25  # use the Gardner's relation to compute rho
 
         self._layers = []
@@ -46,7 +47,7 @@ class HorizontallyLayeredMedium:
 
         return self._layers.pop(index)
 
-    def get_profiles(self, half_space_depth=10):
+    def get_profiles(self, *, half_space_depth=10):
         """ Return profiles of all the parameters to plot.
 
         Returns:
@@ -76,6 +77,58 @@ class HorizontallyLayeredMedium:
         """ Return a new Rayleigh Dispersion Image object for this medium. """
 
         return RayleighDispersionCurve(self, freqs)
+
+    def export_for_tesseral(self, x0, x1, base_filename, *, dz=0.01, half_space_depth=100):
+        """ Export model to SEG-Y format for use in Tesseral.
+
+        Args:
+            x0 : Start of the x axis.
+            x1 : End of the x axis.
+            base_filename : Base file name for resulting SEG-Y files. The parameter name and
+                file extension will be appended automatically.
+            dz: Discretization step for z-axis in m. Default to 1 cm.
+            half_space_depth: How deep should the half-space be in the model.
+
+        Notes:
+            Creates three SEG-Y files: one with values of Vp, one with values of Vs, and one
+            with values of rho.
+
+        """
+
+        hs = [layer.h for layer in self._layers]
+        z1 = sum(hs) + half_space_depth
+        zz = np.repeat(np.arange(0, z1 + dz, dz)[np.newaxis, :], 2, axis=0)
+
+        vps = np.empty_like(zz, dtype=np.float32)
+        vss = np.empty_like(zz, dtype=np.float32)
+        rhos = np.empty_like(zz, dtype=np.float32)
+
+        vps[:, 0] = self._layers[-1].vp
+        vss[:, 0] = self._layers[-1].vs
+        rhos[:, 0] = self._layers[-1].rho
+
+        depth = 0
+        for layer in reversed(self._layers):
+            vps[(zz > depth) & (zz <= depth + layer.h)] = layer.vp
+            vss[(zz > depth) & (zz <= depth + layer.h)] = layer.vs
+            rhos[(zz > depth) & (zz <= depth + layer.h)] = layer.rho
+
+            depth += layer.h
+
+        vps[zz > depth] = self.vp
+        vss[zz > depth] = self.vs
+        rhos[zz > depth] = self.rho
+
+        vps_sgy = SegY.from_matrix(vps, sample_interval=int(dz * 1000))
+        vss_sgy = SegY.from_matrix(vss, sample_interval=int(dz * 1000))
+        rhos_sgy = SegY.from_matrix(rhos, sample_interval=int(dz * 1000))
+
+        for sgy in (vps_sgy, vss_sgy, rhos_sgy):
+            sgy.g.REC_X = [x0, x1]
+
+        vps_sgy.save(f'{base_filename}_vp.sgy')
+        vss_sgy.save(f'{base_filename}_vs.sgy')
+        rhos_sgy.save(f'{base_filename}_rho.sgy')
 
     def __repr__(self):
         vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
