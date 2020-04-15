@@ -54,7 +54,7 @@ class RayleighDispersionCurve:
             txt.write(fundamental)
 
             txt.write(f'{len(higher)}\n')  # how many additional modal curves are in the file?
-            txt.write('\n'.join(higher))
+            txt.write(''.join(higher))
 
     def _calculate_fundamental_mode(self):
         """ Calculate the fundamental Rayleigh mode. """
