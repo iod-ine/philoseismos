@@ -74,7 +74,7 @@ def dispersion_image_of_dm(data_matrix, c_max=1200, c_min=1, c_step=1, f_max=150
     P = np.angle(U)
     ws = 2 * np.pi * f
     cs = np.arange(c_min, c_max + c_step, c_step)
-    xs = data_matrix._headers.OFFSET.values
+    xs = np.abs(data_matrix._headers.OFFSET.values)
 
     V = np.empty(shape=(cs.size, f.size), dtype=complex)
 
