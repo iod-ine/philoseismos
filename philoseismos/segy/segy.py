@@ -169,3 +169,22 @@ class SegY:
         segy.g._df.fillna(0, inplace=True)
 
         return segy
+
+    @classmethod
+    def from_data_matrix(cls, dm):
+        """ Create a new SegY object from a DataMatrix obect. """
+
+        segy = cls()
+
+        segy.dm = dm
+
+        segy.bfh['sample_format'] = const.IDTYPEMAP[dm._m.dtype.name]
+        segy.bfh['sample_interval'] = dm.dt
+        segy.bfh['samples_per_trace'] = dm._m.shape[1]
+        segy.bfh['measurement_system'] = 1
+        segy.bfh['byte_offset_of_data'] = 3600
+        segy.bfh['no_traces'] = dm._m.shape[0]
+
+        segy.g = dm._headers
+
+        return SegY
