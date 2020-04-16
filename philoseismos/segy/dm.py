@@ -57,14 +57,43 @@ class DataMatrix:
 
         return dm
 
-    def extract(self, indices):
+    def extract_by_indices(self, indices):
         """ Return a new DM, constructed from traces extracted by given indices. """
 
         new = DataMatrix()
-        new.dt = np.copy(self.dt)
+        new.dt = self.dt
         new.t = np.copy(self.t)
         new._m = np.copy(self._m[indices])
         new._headers = self._headers.loc[indices, :].copy()
+
+        return new
+
+    def filter(self, header, first, last, step):
+        """ Return a new DM filtered in a way that header = range(first, last + 1, step).
+
+        Args:
+            header (str): Header name to filter by.
+            first (float): First value of the header.
+            last (float): Last value of the header (inclusive).
+            step (float): Step of the header.
+
+        Returns:
+            A new DataMatrix object.
+
+        """
+
+        new = DataMatrix()
+        new.dt = self.dt
+        new.t = np.copy(self.t)
+
+        subset = self._headers._df.loc[self._headers._df[header] >= first]
+        subset = subset.loc[subset[header] <= last]
+        subset = subset.loc[subset.OFFSET % step == 0]
+
+        new._m = self._m[subset.index]
+        new._headers = subset.reset_index().drop('index', axis=1)
+        new._headers.TRACENO = new._headers.index + 1
+        new._headers.SEQNO = new._headers.index + 1
 
         return new
 
