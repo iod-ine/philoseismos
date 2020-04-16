@@ -10,7 +10,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     name='philoseismos',
-    version='0.0.13_alpha',
+    version='0.0.14_alpha',
     author="Ivan Dubrovin",
     author_email="io.dubrovin@icloud.com",
     description="Engineering seismologist's toolbox",
