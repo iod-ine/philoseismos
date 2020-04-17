@@ -36,6 +36,7 @@ class HorizontallyLayeredMedium:
         self.rho = rho if rho else 310 * self.vp ** 0.25  # use the Gardner's relation to compute rho
 
         self._layers = []
+        self._q = None
 
     def add_layer(self, *, vp=None, vs=300, rho=None, h=10):
         """ Add a layer on top of the medium. """
@@ -78,7 +79,8 @@ class HorizontallyLayeredMedium:
 
         return RayleighDispersionCurve(self, freqs)
 
-    def export_for_tesseral(self, x0, x1, base_filename, *, dz=0.01, half_space_depth=100):
+    def export_for_tesseral(self, x0, x1, base_filename, *,
+                            dz=0.01, half_space_depth=100, use_quality_factor=False):
         """ Export model to SEG-Y format for use in Tesseral.
 
         Args:
@@ -88,6 +90,7 @@ class HorizontallyLayeredMedium:
                 file extension will be appended automatically.
             dz: Discretization step for z-axis in m. Default to 1 cm.
             half_space_depth: How deep should the half-space be in the model.
+            use_quality_factor (bool): If True, an additional SEG-Y file with values of Q will be created.
 
         Notes:
             Creates three SEG-Y files: one with values of Vp, one with values of Vs, and one
@@ -134,6 +137,11 @@ class HorizontallyLayeredMedium:
         vps_sgy.save(f'{base_filename}_vp.sgy')
         vss_sgy.save(f'{base_filename}_vs.sgy')
         rhos_sgy.save(f'{base_filename}_rho.sgy')
+
+        if use_quality_factor:
+            qs_sgy = SegY.from_matrix(vss / 8, sample_interval=int(dz * 1000))
+            qs_sgy.g.REC_X = [x0, x1]
+            qs_sgy.save(f'{base_filename}_q.sgy')
 
     def __repr__(self):
         vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
