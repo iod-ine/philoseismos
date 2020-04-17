@@ -187,4 +187,4 @@ class SegY:
 
         segy.g = dm._headers
 
-        return SegY
+        return segy
