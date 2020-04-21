@@ -37,7 +37,7 @@ def rayleigh_layer_matrix(layer, c, f):
     a11 = a44 = g * cos(P) - d * cos(Q)
     a12 = a34 = g * s * sin(Q) if c == vp else d / r * sin(P) + g * s * sin(Q)
     a13 = a24 = -(cos(P) - cos(Q)) / rho
-    a14 = (cos(P) - cos(Q)) / rho
+    a14 = s * sin(Q) / rho if c == vp else (sin(P) / r + s * sin(Q)) / rho
     a21 = a43 = g * r * sin(P) if c == vs else g * r * sin(P) + d / s * sin(Q)
     a22 = a33 = -d * cos(P) + g * cos(Q)
     a23 = -r * sin(P) / rho if c == vs else -(r * sin(P) + sin(Q) / s) / rho
