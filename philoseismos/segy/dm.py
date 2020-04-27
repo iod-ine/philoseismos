@@ -6,6 +6,7 @@ e-mail: io.dubrovin@icloud.com """
 import struct
 import numpy as np
 
+from philoseismos.segy.g import Geometry
 from philoseismos.segy import gfunc
 from philoseismos.segy import constants as const
 
@@ -88,12 +89,13 @@ class DataMatrix:
 
         subset = self._headers._df.loc[self._headers._df[header] >= first]
         subset = subset.loc[subset[header] <= last]
-        subset = subset.loc[subset.OFFSET % step == 0]
+        subset = subset.loc[subset[header] % step == 0]
 
         new._m = self._m[subset.index]
-        new._headers = subset.reset_index().drop('index', axis=1)
-        new._headers.TRACENO = new._headers.index + 1
-        new._headers.SEQNO = new._headers.index + 1
+        new._headers = Geometry()
+        new._headers._df = subset.reset_index().drop('index', axis=1)
+        new._headers._df.TRACENO = new._headers._df.index + 1
+        new._headers._df.SEQNO = new._headers._df.index + 1
 
         return new
 
