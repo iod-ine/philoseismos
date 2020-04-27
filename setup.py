@@ -10,7 +10,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     name='philoseismos',
-    version='0.0.21_alpha',
+    version='0.0.22_alpha',
     author="Ivan Dubrovin",
     author_email="io.dubrovin@icloud.com",
     description="Engineering seismologist's toolbox",
@@ -22,8 +22,6 @@ setuptools.setup(
         'numpy',
         'pandas',
         'scipy',
-        'sympy',
-        'tqdm',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
