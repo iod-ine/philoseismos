@@ -71,3 +71,25 @@ def test_filter(manually_crafted_segy_file):
     assert isinstance(new._headers, Geometry)
     # assert new._m.shape == (7, 512)
     assert np.alltrue(new._headers.loc[:, 'REC_X'] == np.arange(0, 28, 4))
+
+
+def test_crop(manually_crafted_segy_file):
+    """ Test the crop method of the DataMatrix. """
+
+    segy = SegY.load(manually_crafted_segy_file)
+    dm = segy.dm
+
+    assert np.alltrue(dm.t == np.arange(0, 256, 0.5))
+    assert dm._m.shape == (24, 512)
+
+    new = dm.crop(128)
+    assert np.alltrue(new.t == np.arange(0, 128.5, 0.5))
+    assert new._m.shape == (24, 257)
+
+    new = dm.crop(100)
+    assert np.alltrue(new.t == np.arange(0, 100.5, 0.5))
+    assert new._m.shape == (24, 201)
+
+    dm.crop(128, inplace=True)
+    assert np.alltrue(dm.t == np.arange(0, 128.5, 0.5))
+    assert dm._m.shape == (24, 257)

@@ -100,7 +100,7 @@ class DataMatrix:
         return new
 
     def resample(self, dt):
-        """ Return a new DM filtered in a way that header = range(first, last + 1, step).
+        """ Return a new DM with a bigger dt.
 
         Args:
             dt: New dt.
@@ -124,6 +124,32 @@ class DataMatrix:
         new._headers._df = self._headers._df.copy()
 
         return new
+
+    def crop(self, t, inplace=False):
+        """ Return a new DM with new trace length.
+
+        Args:
+            t: New trace length.
+            inplace (bool): If True, modify this DM instead of returning a new one.
+
+        Returns:
+            A new DataMatrix object.
+
+        """
+
+        if inplace:
+            self._m = self._m[:, self.t <= t]
+            self.t = self.t[self.t <= t]
+        else:
+            new = DataMatrix()
+            new.dt = self.dt
+            new.t = self.t[self.t <= t]
+
+            new._m = self._m[:, self.t <= t]
+            new._headers = Geometry()
+            new._headers._df = self._headers._df.copy()
+
+            return new
 
     def __repr__(self):
         return f'DataMatrix: {self._m.shape[0]} traces, {self._m.shape[1]} samples, dt={self.dt}'
