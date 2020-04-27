@@ -65,7 +65,8 @@ class DataMatrix:
         new.dt = self.dt
         new.t = np.copy(self.t)
         new._m = np.copy(self._m[indices])
-        new._headers = self._headers.loc[indices, :].copy()
+        new._headers = Geometry()
+        new._headers._df = self._headers.loc[indices, :].copy()
 
         return new
 

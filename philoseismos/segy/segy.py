@@ -185,6 +185,6 @@ class SegY:
         segy.bfh['byte_offset_of_data'] = 3600
         segy.bfh['no_traces'] = dm._m.shape[0]
 
-        segy.g._df = dm._headers
+        segy.g._df = dm._headers._df.copy()
 
         return segy
