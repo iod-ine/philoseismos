@@ -6,17 +6,17 @@ e-mail: io.dubrovin@icloud.com """
 import numpy as np
 import pytest
 
-from philoseismos.grids import Surfer6BinaryGrid
+from philoseismos.grids import Surfer6TextGrid
 
 
-def test_loading_surfer6binary(binary_grd_file, bad_binary_grd_file):
+def test_loading_surfer6text(text_grd_file, bad_text_grd_file):
     """ Test loading process of the grid files. """
 
     # only proceeds to read true .grd files
     with pytest.raises(ValueError):
-        grd = Surfer6BinaryGrid.load(bad_binary_grd_file)
+        grd = Surfer6TextGrid.load(bad_text_grd_file)
 
-    grd = Surfer6BinaryGrid.load(binary_grd_file)
+    grd = Surfer6TextGrid.load(text_grd_file)
 
     assert grd.nx == 10
     assert grd.ny == 15
@@ -31,19 +31,19 @@ def test_loading_surfer6binary(binary_grd_file, bad_binary_grd_file):
     assert np.alltrue(grd.dm == np.arange(150).reshape(15, 10))
 
 
-def test_surfer6binary_properties(binary_grd_file):
+def test_surfer6binary_properties(text_grd_file):
     """ Test the properties of the grid. """
 
-    grd = Surfer6BinaryGrid.load(binary_grd_file)
+    grd = Surfer6TextGrid.load(text_grd_file)
 
     # to help construct the plt.imshow, grid returns it's extent
     assert grd.extent == [0, 9, 38, 10]
 
 
-def test_surfer6binary_invert_axis_methods(binary_grd_file):
+def test_surfer6binary_invert_axis_methods(text_grd_file):
     """ Test the .invert_yaxis() and .invert_xaxis() method of the gird. """
 
-    grd = Surfer6BinaryGrid.load(binary_grd_file)
+    grd = Surfer6TextGrid.load(text_grd_file)
 
     dm = np.arange(150).reshape(15, 10)
 
