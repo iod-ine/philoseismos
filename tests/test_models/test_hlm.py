@@ -77,20 +77,20 @@ def test_export_to_segy_for_tesseral(hlm):
 def test_get_profiles(hlm):
     """ Test the method for getting parameter profiles to plot. """
 
-    z, vp, vs, rho = hlm.get_profiles()
+    z, vp, vs, rho, q = hlm.get_profiles()
     assert z == [0, 10]
     assert vp == [1500, 1500]
     assert vs == [750, 750]
     assert rho == [2000, 2000]
 
     hlm.add_layer(vp=400, vs=200, rho=1500, h=10)
-    z, vp, vs, rho = hlm.get_profiles(half_space_depth=20)
+    z, vp, vs, rho, q = hlm.get_profiles(half_space_depth=20)
     assert z == [0, 10, 10, 30]
     assert vp == [400, 400, 1500, 1500]
     assert vs == [200, 200, 750, 750]
 
     hlm.add_layer(vp=200, vs=100, rho=1000, h=20)
-    z, vp, vs, rho = hlm.get_profiles(half_space_depth=5)
+    z, vp, vs, rho, q = hlm.get_profiles(half_space_depth=5)
     assert z == [0, 20, 20, 30, 30, 35]
     assert vp == [200, 200, 400, 400, 1500, 1500]
     assert vs == [100, 100, 200, 200, 750, 750]
