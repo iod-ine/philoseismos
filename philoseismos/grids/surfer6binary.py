@@ -37,7 +37,7 @@ class Surfer6BinaryGrid:
             if id_ != b'DSBB':
                 raise ValueError('The specified file is not a Surfer 6 Binary grid!')
 
-            out = Surfer6BinaryGrid()
+            out = cls()
 
             out.nx = struct.unpack('<h', f.read(2))[0]  # number of grid lines along the X axis
             out.ny = struct.unpack('<h', f.read(2))[0]  # number of grid lines along the Y axis
