@@ -2,3 +2,6 @@
 dist
 build
 philoseismos.egg-info
+__pycache__/
+.DS_Store
+*.sh
