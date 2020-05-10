@@ -4,6 +4,7 @@ author: Ivan Dubrovin
 e-mail: io.dubrovin@icloud.com """
 
 import numpy as np
+import scipy.fftpack as fft
 
 from philoseismos.processing.spectra import average_spectrum_of_dm, dispersion_image_of_dm
 
@@ -39,3 +40,24 @@ def imshow_dispersion_image_of_dm_into(data_matrix, ax, c_max=1200, c_min=1, c_s
     image = ax.imshow(np.abs(V), aspect='auto', interpolation='spline36', extent=[0, f_max, c_min, c_max])
 
     return image
+
+
+def pcolormesh_fk_spectrum_of_dm_into(data_matrix, ax, f_max=150):
+    fft2d = np.abs(fft.fft2(data_matrix._m.T))
+
+    dx = np.diff(data_matrix._headers.OFFSET)[0]
+    dt = data_matrix.dt * 1e-6
+
+    kn = 1 / 2 / dx
+    fn = 1 / 2 / dt
+
+    ks = np.linspace(-kn, kn, data_matrix._m.shape[0] + 1)
+    fs = np.linspace(-fn, fn, data_matrix._m.shape[1] + 1)
+
+    fft2d = fft.fftshift(fft2d)
+    fft2d = fft2d[:, ::-1]
+
+    pc = ax.pcolormesh(ks, fs, fft2d, cmap='binary')
+    ax.set_ylim(0, f_max)
+
+    return pc
