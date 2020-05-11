@@ -90,7 +90,7 @@ class DataMatrix:
 
         subset = self._headers._df.loc[self._headers._df[header] >= first]
         subset = subset.loc[subset[header] <= last]
-        subset = subset.loc[subset[header] % step == 0]
+        subset = subset.loc[(subset[header] - first) % step == 0]
 
         new._m = self._m[subset.index]
         new._headers = Geometry()
