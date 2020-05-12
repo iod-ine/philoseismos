@@ -9,7 +9,7 @@ import scipy.fftpack as fft
 from philoseismos.processing.spectra import average_spectrum_of_dm, dispersion_image_of_dm
 
 
-def plot_average_spectrum_of_dm_into(data_matrix, ax, norm=True, fill=True):
+def plot_average_spectrum_of_dm_into(data_matrix, ax, norm=True, fill=True, **kwargs):
     """ Plot the average spectrum of given DM into given Axes. """
 
     freq, amps = average_spectrum_of_dm(data_matrix)
@@ -17,7 +17,7 @@ def plot_average_spectrum_of_dm_into(data_matrix, ax, norm=True, fill=True):
     if norm:
         amps /= amps.max()
 
-    return ax.fill_between(freq, amps) if fill else ax.plot(freq, amps)
+    return ax.fill_between(freq, amps, **kwargs) if fill else ax.plot(freq, amps)
 
 
 def imshow_dispersion_image_of_dm_into(data_matrix, ax, c_max=1200, c_min=1, c_step=1, f_max=150):
