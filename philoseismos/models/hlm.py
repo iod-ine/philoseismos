@@ -35,6 +35,22 @@ class HorizontallyLayeredMedium:
 
         self._layers = []
 
+    @classmethod
+    def load_from_radex(cls, file):
+        """ Load the .mdl file, exported from RadExProo's MASW module. """
+
+        with open(file, 'r') as mdl:
+            lines = mdl.readlines()
+
+        _, vp, vs, rho, _ = map(float, lines[-1].split())
+        out = cls(vp=vp, vs=vs, rho=rho)
+
+        for line in reversed(lines[2:-1]):
+            h, vp, vs, rho, _ = map(float, line.split())
+            out.add_layer(vp=vp, vs=vs, rho=rho, h=h)
+
+        return out
+
     def add_layer(self, *, vp=None, vs=300, rho=None, h=10, q=None):
         """ Add a layer on top of the medium. """
 
