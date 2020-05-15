@@ -16,7 +16,7 @@ class RayleighDispersionCurve:
         self.modal_curves = []
 
     @classmethod
-    def load(cls, file):
+    def load_from_rdcscalc(cls, file):
         """ Load the DCs generated with rdcscalc program. """
 
         curves = pd.read_csv(file)
@@ -31,6 +31,49 @@ class RayleighDispersionCurve:
         out.modal_curves.append(curves['5th'])
 
         out.freqs = np.arange(0, 1500, 1) * 0.1 + 0.1
+
+        return out
+
+    @classmethod
+    def load_from_radex(cls, file):
+        """ Load the DCs exported from RadExPro's MASW module. """
+
+        with open(file, 'r') as cur:
+            cur.readline()  # skip first 2 lines
+            cur.readline()
+
+            out = cls()
+            out.freqs = []
+
+            n = int(cur.readline())  # number of points in fundamental curve
+
+            fs = np.empty(n)
+            cs = np.empty(n)
+
+            for i in range(n):
+                f, c = map(float, cur.readline().split())
+                fs[i] = f
+                cs[i] = c
+
+            out.freqs.append(fs)
+            out.modal_curves.append(cs)
+
+            k = int(cur.readline())  # number of additional curves
+
+            for i in range(k):
+                cur.readline()
+                n = int(cur.readline())  # number of points in the curve
+
+                fs = np.empty(n)
+                cs = np.empty(n)
+
+                for i in range(n):
+                    f, c = map(float, cur.readline().split())
+                    fs[i] = f
+                    cs[i] = c
+
+                out.freqs.append(fs)
+                out.modal_curves.append(cs)
 
         return out
 
