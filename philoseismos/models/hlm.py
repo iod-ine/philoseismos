@@ -155,6 +155,15 @@ class HorizontallyLayeredMedium:
         rhos_sgy.save(f'{base_filename}_rho.sgy')
         qs_sgy.save(f'{base_filename}_q.sgy')
 
+    def export_for_rdcscalc(self, file):
+        """ Export HLM as an input file for rdcscalc. """
+
+        with open(file, 'w') as f:
+            f.write(f'Halfspace: {self.vp} {self.vs} {self.rho / 1000}\n')
+
+            for layer in self._layers:
+                f.write(f'Layer: {layer.vp} {layer.vs} {layer.rho / 1000} {layer.h}\n')
+
     def __repr__(self):
         vp = f'vp={self.vp}' if self.vp == int(self.vp) else f'vp≈{round(self.vp)}'
         vs = f'vs={self.vs}' if self.vs == int(self.vs) else f'vs≈{round(self.vs)}'
